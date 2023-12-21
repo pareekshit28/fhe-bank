@@ -1,23 +1,68 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import LandingPage from "./pages/LandingPage";
+import Navbar from "./components/Navbar";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import DepositPage from "./pages/DepositPage";
+import LoanPage from "./pages/LoanPage";
+import AccountPage from "./pages/AccountPage";
 
 function App() {
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    // Check if MetaMask is already connected
+    const checkConnection = async () => {
+      if (window.ethereum && window.ethereum.selectedAddress) {
+        setIsConnected(true);
+      }
+    };
+
+    checkConnection();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className=" h-screen w-screen">
+      <BrowserRouter>
+        <Navbar isConnected={isConnected} setIsConnected={setIsConnected} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LandingPage
+                isConnected={isConnected}
+                setIsConnected={setIsConnected}
+              />
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <AccountPage
+                isConnected={isConnected}
+                setIsConnected={setIsConnected}
+              />
+            }
+          />
+          <Route
+            path="/deposit"
+            element={
+              <DepositPage
+                isConnected={isConnected}
+                setIsConnected={setIsConnected}
+              />
+            }
+          />
+          <Route
+            path="/loans"
+            element={
+              <LoanPage
+                isConnected={isConnected}
+                setIsConnected={setIsConnected}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
